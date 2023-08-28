@@ -27,6 +27,14 @@ class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //? AppBar() widget
+      /* actions parametar zeli listu widgeta koji se inace koristi za prikazivanje buttonsa u ovom top baru. I sada kada smo dodali AppBar, Flutter je automatski bolje fitovao sadrzaj, tipa vise The Chart nije na mestu gde je notch, vec app pocinje takoreci posle statusne traake one na telefonu */
+      appBar: AppBar(
+        title: Text('Flutter Expense tracker'),
+        actions: [
+          IconButton(icon: Icon(Icons.add), onPressed: () {}),
+        ],
+      ),
       body: Column(
         children: [
           const Text('The chart'),
