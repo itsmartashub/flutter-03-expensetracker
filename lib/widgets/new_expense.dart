@@ -26,6 +26,7 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDate;
+  Category _selectedCategory = Category.leisure;
 
   @override
   void dispose() {
@@ -103,8 +104,37 @@ class _NewExpenseState extends State<NewExpense> {
                 ),
               )
             ]),
+            const SizedBox(height: 16),
             Row(
               children: [
+                /* Category.values, .values je lista enum-a tj lista kategorija, a items zeli listu Dropdown menu itema, zato cemo koristiti .map() da transformisemo jedan tip podataka u drugi.
+                DropdownMenuItem je widget gde moramo da setujemo child parametar u drugi widget sto predstavlja ono sto ce biti prikazano na ekranu. category je enum a nama treba string posto koristimo u Text-u. pa cemo pretvoriti ovaj category u text sa flutter propertijme name na kog zovemo toString().
+                - Ovaj value property u DropdownMenuItem nije vidljiv korisniku, vec se cuva interno za svaki DMI, dakle ono sto je vidljivo je ovo child: Text. I to value predstvlja vrednost onog onChanged parametra koje se menja svaki x kad korisnik izabere neki od ovih DMI */
+                DropdownButton(
+                  // s ovim value se uveravamo da ce neki item da bude difoltno selektovan, a nece biti prazno (leisure je inicijalno)
+                  value: _selectedCategory,
+                  items: Category.values
+                      .map(
+                        (category) => DropdownMenuItem(
+                          value: category,
+                          child: Text(
+                            // category.name.toString(),
+                            category.name.toUpperCase(),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  },
+                ),
+                const Spacer(),
                 TextButton(
                     onPressed: () {
                       /* pop property zeli context onaj iz Widget build(BuildContext context). pop() uklanja ovaj overlays sa skrina */
