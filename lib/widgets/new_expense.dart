@@ -33,6 +33,18 @@ class _NewExpenseState extends State<NewExpense> {
     super.dispose();
   }
 
+  void _presentDatePicker() {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
+
+    //? showDatePicker() flutter built-in method
+    showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: firstDate,
+        lastDate: now);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -49,15 +61,37 @@ class _NewExpenseState extends State<NewExpense> {
                 label: Text('Title'),
               ),
             ),
-            TextField(
-              // onChanged: _saveTitleInput, // NACIN I
-              controller: _amountController, // NACIN II
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                prefixText: '\$ ',
-                label: Text('Amount'),
+            Row(children: [
+              /* * takodje mora Expanded jer se ispostavilo da TextField widget ima problema kada je unutar row-a ovako, jer takodje zeli horizontalno da zauze sto je vise psrostora moguce, a Row difoltno ne ogranicava prostor koji sme da se zauzme, i to izaziva probleme kada flutter treba da renderuje ovu kombinaciju na ekranu. A ako ovde budemo koristili Expanded ovde on ce se pobrinuti da TextField zauzme koliko mesa mu je potrebno za kontent, a ne vise */
+              Expanded(
+                child: TextField(
+                  // onChanged: _saveTitleInput, // NACIN I
+                  controller: _amountController, // NACIN II
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    prefixText: '\$ ',
+                    label: Text('Amount'),
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(width: 16),
+              //! posto je Row unutar Row-a, moramo koristiti Expanded!
+              Expanded(
+                child: Row(
+                  // da pushuje kontent na kraj (desno)
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  // centrira verticalno
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Selected Date'),
+                    IconButton(
+                      onPressed: _presentDatePicker,
+                      icon: const Icon(Icons.calendar_month),
+                    )
+                  ],
+                ),
+              )
+            ]),
             Row(
               children: [
                 TextButton(
