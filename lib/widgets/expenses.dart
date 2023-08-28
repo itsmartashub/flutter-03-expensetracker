@@ -24,6 +24,21 @@ class _ExpensesState extends State<Expenses> {
         category: Category.leisure),
   ];
 
+  // ? showModalBottomSheet je flutter fn
+  /* Ova fn kada god se izvrsi dinamicno dodaje novi UI element poput modal overlay-a. On ima dva obavezna parametra: context i builder context parametar zeli vrednost BuildContext parametra, ovog dole recimo u Widget build(BuildContext context koji dobijamo automatski
+  Posto smo  u widgetu koji extenduje State, flutter automatski dodaje context property tvojoj klasi, i onda se taj context provided by flutter moze koristiti ovde za vrednost ovog ovde context parametra
+  //? Context
+  Svaki widget uma svoj context object koji sadrzi metadata informacije u skladu sa tim widgetom i VRLO VAZNO, u skladu za pozicijom widgeta u celokupnom UI, u celokupnom widget tree
+  //? Builder
+  Njemu treba fn kao vrednost koja vraca Widget, i uatomatski dobija 1 input value passed by flutter koji poziva ovu builder fn buk kada pokusava da prikaze showModalBottomSheet.
+  Ovde koristmo ctx, a ne context, jer je to drugaciji context ustv pa das e ne clashaju, i onda u return vracamo nas widget koji zelimo da se renderuje kada se klikne na add btn */
+  void _openAddExpenseOverlay() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => Text('Modal botom sheet'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +47,10 @@ class _ExpensesState extends State<Expenses> {
       appBar: AppBar(
         title: Text('Flutter Expense tracker'),
         actions: [
-          IconButton(icon: Icon(Icons.add), onPressed: () {}),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: _openAddExpenseOverlay,
+          ),
         ],
       ),
       body: Column(
