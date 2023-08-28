@@ -60,7 +60,12 @@ class _NewExpenseState extends State<NewExpense> {
             ),
             Row(
               children: [
-                TextButton(onPressed: () {}, child: const Text('Cancel')),
+                TextButton(
+                    onPressed: () {
+                      /* pop property zeli context onaj iz Widget build(BuildContext context). pop() uklanja ovaj overlays sa skrina */
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel')),
                 ElevatedButton(
                   onPressed: () {
                     // print(_enteredTitle); // NACIN I
