@@ -23,10 +23,13 @@ class _NewExpenseState extends State<NewExpense> {
   
   - Sada sa NACIN II mozemo da idemo u TextField i obrisemo onChanged parametar, vise nam ne treba, i umesto toga dodajemo controller parametar da on sad bude zaduzen za ovo TextField */
   final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
 
   @override
   void dispose() {
     _titleController.dispose();
+    _amountController.dispose();
+
     super.dispose();
   }
 
@@ -46,15 +49,26 @@ class _NewExpenseState extends State<NewExpense> {
                 label: Text('Title'),
               ),
             ),
+            TextField(
+              // onChanged: _saveTitleInput, // NACIN I
+              controller: _amountController, // NACIN II
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                prefixText: '\$ ',
+                label: Text('Amount'),
+              ),
+            ),
             Row(
               children: [
+                TextButton(onPressed: () {}, child: const Text('Cancel')),
                 ElevatedButton(
                   onPressed: () {
                     // print(_enteredTitle); // NACIN I
                     print(_titleController.text); // NACIN II
+                    print(_amountController.text);
                   },
                   child: const Text('Save Expense'),
-                )
+                ),
               ],
             )
           ],
