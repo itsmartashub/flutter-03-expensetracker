@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/models/expense.dart'; // da bismo mogli da koristimo formatter koji smo definisali tamo sa: final formatter = DateFormat.yMd(); i ovde, wtf
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key});
@@ -24,6 +25,7 @@ class _NewExpenseState extends State<NewExpense> {
   - Sada sa NACIN II mozemo da idemo u TextField i obrisemo onChanged parametar, vise nam ne treba, i umesto toga dodajemo controller parametar da on sad bude zaduzen za ovo TextField */
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  DateTime? _selectedDate;
 
   @override
   void dispose() {
@@ -33,16 +35,22 @@ class _NewExpenseState extends State<NewExpense> {
     super.dispose();
   }
 
-  void _presentDatePicker() {
+  void _presentDatePicker() async {
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
 
     //? showDatePicker() flutter built-in method
-    showDatePicker(
+    /* Ova fn koju prosledjujemo u then ce se izvrsiti by flutter kada vrednost bude dostupna tj kada korisnik izabere datum. Future Object. Zelimo da zadrzimo neku vrednost, neki event koji ce se desiti u buducnosti. Umesto then mozemo korisititi async */
+    final pickedDate = await showDatePicker(
         context: context,
         initialDate: now,
         firstDate: firstDate,
         lastDate: now);
+    // .then((value) => print(value));
+
+    setState(() {
+      _selectedDate = pickedDate;
+    });
   }
 
   @override
@@ -83,7 +91,10 @@ class _NewExpenseState extends State<NewExpense> {
                   // centrira verticalno
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Selected Date'),
+                    // sa ! govorimo dartu da vrednost nece biti null, a buni se jer smo stavili gore DateTime? _selectedDate; sto znaci ili da bude date ili null, ali smo ovim ternarnim operatorom rekli da nece biti null
+                    Text(_selectedDate == null
+                        ? 'No date selected'
+                        : formatter.format(_selectedDate!)),
                     IconButton(
                       onPressed: _presentDatePicker,
                       icon: const Icon(Icons.calendar_month),
