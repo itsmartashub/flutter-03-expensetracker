@@ -54,6 +54,19 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
+  void _submitExpenseData() {
+    // moramo pretvoriti amount koju korisnik unosi iz string au broj. to mozemo uraditi sa double.tryParse() koji za argument uzima string, potom vraca DOUBLE ako je uspeo da pretvori taj string u broj ili vraca NULL ako ne moze da konvertuje. reicmo tryParse('Hellooo') bi bilo null, a recimo tryParse('1.21') bi bilo 1.21
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    // trim() moze da se pozovde na textove, a .isEmpty() moze i na String i na List
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      // show error msg
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -142,11 +155,12 @@ class _NewExpenseState extends State<NewExpense> {
                     },
                     child: const Text('Cancel')),
                 ElevatedButton(
-                  onPressed: () {
-                    // print(_enteredTitle); // NACIN I
-                    print(_titleController.text); // NACIN II
-                    print(_amountController.text);
-                  },
+                  // onPressed: () {
+                  //   // print(_enteredTitle); // NACIN I
+                  //   print(_titleController.text); // NACIN II
+                  //   print(_amountController.text);
+                  // },
+                  onPressed: _submitExpenseData,
                   child: const Text('Save Expense'),
                 ),
               ],
