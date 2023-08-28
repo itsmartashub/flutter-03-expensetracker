@@ -28,9 +28,9 @@ class ExpenseItem extends StatelessWidget {
               /* category i date wrapujemo u Row, i zelimo da ih pushujemo skroz udesno, na kraj Card-a */
               Row(
                 children: [
-                  Icon(Icons.alarm),
-                  SizedBox(width: 8),
-                  Text(expense.date.toString()),
+                  Icon(categoryIcons[expense.category]),
+                  const SizedBox(width: 8),
+                  Text(expense.formattedDate),
                 ],
               ),
             ],
