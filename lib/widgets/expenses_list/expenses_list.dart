@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart'; // this.expenses
 
 class ExpensesList extends StatelessWidget {
-  const ExpensesList({super.key, required this.expenses});
+  const ExpensesList(
+      {super.key, required this.expenses, required this.onRemoveExpense});
 
   final List<Expense> expenses;
+  final void Function(Expense expense) onRemoveExpense;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,18 @@ class ExpensesList extends StatelessWidget {
     return ListView.builder(
       itemCount: expenses.length,
       // itemBuilder: (ctx, index) => Text(expenses[index].title),
-      itemBuilder: (ctx, index) => ExpenseItem(expenses[index]),
+      // itemBuilder: (ctx, index) => ExpenseItem(expenses[index]),
+      /* ? Dismissible() widget
+        ! za remove swipovanje koji za parametar ima widget koji ce da bude removable, i key da bi flutter znao koji widget treba da ukloni (to je onaj key iz super.key)
+        ```   ValueKey(expenses[index]) 
+        ! Medjutim ovo uklanja widget samo vizuelno, iz UI, ali moramo ukloniti i iz data liste zapravo jer dodje do greske kada krenemo da kreiramo novi expense.  koristimo onDismissed Dismissible parametar za to, a fn _removeExpense() idemo da kreiramo u expenses.dart. Medjutim, onDismissed zeli FUNKCIJU za value koja uzima DismissDirection za input sto govori da li svajpujemo s leva na desno ili s desna na levo */
+      itemBuilder: (ctx, index) => Dismissible(
+        onDismissed: (direction) {
+          onRemoveExpense(expenses[index]);
+        },
+        key: ValueKey(expenses[index]),
+        child: ExpenseItem(expenses[index]),
+      ),
     );
   }
 }
