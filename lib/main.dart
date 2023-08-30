@@ -37,7 +37,7 @@ void main() {
                 titleLarge: TextStyle(
                   fontWeight: FontWeight.normal,
                   color: kColorScheme.onSecondaryContainer,
-                  fontSize: 20,
+                  fontSize: 18,
                 ),
               )
           // svi skrins ce imati ovaj bg

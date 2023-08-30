@@ -13,29 +13,38 @@ class ExpenseItem extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         // child: Text(expense.title),
-        child: Column(children: [
-          Text(expense.title),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              /* //! 12.3433 => 12.34
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              expense.title,
+              // i ovo zada aplajduje TextStyle koji je setovan za titleLarge ili iz default TextStyle-a, ili, kao u nasem slucaju iz naseg TextStyle koji smo overwritovali za titleLarge
+              style: Theme.of(context).textTheme.titleLarge,
+              // cak i ovde mozemo chainovati copyWith() da kopiramo default TextStyle i overwritujemo ga svojim
+              // style: Theme.of(context).textTheme.titleLarge.copyWith(),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                /* //! 12.3433 => 12.34
               expense.amount je double pa konvertujemo u string sa toString() tj u ovom slucaju sa toStringAsFixed( ) jer hocemo da zaokruzimo na dve decimale. I zelimo da stavimo $ dollar sign ispred vrednosti, zato moramo dodati ${} (injected syntax) i ispred \$ (zapravo dollar sign) */
-              Text('\$${expense.amount.toStringAsFixed(2)}'),
+                Text('\$${expense.amount.toStringAsFixed(2)}'),
 
-              /* ? Spacer widget
+                /* ? Spacer widget
               widget koji moze da se koristi i u Row i u Column da kaze Flutter-u da kreira widget koji treba da zauzme koliko god prostora moze izmedju widgeta pre i posle Spacer()-a */
-              const Spacer(),
-              /* category i date wrapujemo u Row, i zelimo da ih pushujemo skroz udesno, na kraj Card-a */
-              Row(
-                children: [
-                  Icon(categoryIcons[expense.category]),
-                  const SizedBox(width: 8),
-                  Text(expense.formattedDate),
-                ],
-              ),
-            ],
-          )
-        ]),
+                const Spacer(),
+                /* category i date wrapujemo u Row, i zelimo da ih pushujemo skroz udesno, na kraj Card-a */
+                Row(
+                  children: [
+                    Icon(categoryIcons[expense.category]),
+                    const SizedBox(width: 8),
+                    Text(expense.formattedDate),
+                  ],
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

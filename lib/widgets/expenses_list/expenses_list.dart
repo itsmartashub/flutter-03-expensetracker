@@ -29,10 +29,23 @@ class ExpensesList extends StatelessWidget {
         ```   ValueKey(expenses[index]) 
         ! Medjutim ovo uklanja widget samo vizuelno, iz UI, ali moramo ukloniti i iz data liste zapravo jer dodje do greske kada krenemo da kreiramo novi expense.  koristimo onDismissed Dismissible parametar za to, a fn _removeExpense() idemo da kreiramo u expenses.dart. Medjutim, onDismissed zeli FUNKCIJU za value koja uzima DismissDirection za input sto govori da li svajpujemo s leva na desno ili s desna na levo */
       itemBuilder: (ctx, index) => Dismissible(
+        key: ValueKey(expenses[index]),
+        // background trazo Widget, mi kor Container jer ima mng feature, izmedju ostalog i color. colorScheme je flutter property, a ono uzima boje iz onog naseg kColorScheme
+        background: Container(
+          // mozemo dodati opacity na boju sa chainovanjem .withOpacity()
+          color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+          /* stavljamo margin da pocne gde i nas card
+          - ali to bas nije pametno ovako staticno jer sta ako se promeni margin carda, onda moramo i ovo. zato bolje d adohvatimo margin carda i unesemo ovde za margin
+          - inace mora da se napise margin! sa uzvicnikom jer on tripuje da je margin null, pa mu govorimo da nije */
+          // margin: EdgeInsets.symmetric(horizontal: 16), // I
+          // margin: Theme.of(context).cardTheme.margin, // II
+          margin: EdgeInsets.symmetric(
+            horizontal: Theme.of(context).cardTheme.margin!.horizontal,
+          ), // III za margin samo levo-desno
+        ),
         onDismissed: (direction) {
           onRemoveExpense(expenses[index]);
         },
-        key: ValueKey(expenses[index]),
         child: ExpenseItem(expenses[index]),
       ),
     );
