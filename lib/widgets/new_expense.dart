@@ -90,12 +90,17 @@ class _NewExpenseState extends State<NewExpense> {
       date: _selectedDate!,
       category: _selectedCategory,
     ));
+
+    // da se zatvori overlay
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(16),
+        // padding: const EdgeInsets.all(16),
+        // da kontent ne bi se overlapovao sa gore kamerom i sl
+        padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
         child: Column(
           //? TextField widget
           /* Omogucava korisniku da unese text. Ima mnooogo propertyja */

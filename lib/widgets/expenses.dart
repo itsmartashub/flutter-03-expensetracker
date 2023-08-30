@@ -34,7 +34,9 @@ class _ExpensesState extends State<Expenses> {
   Njemu treba fn kao vrednost koja vraca Widget, i uatomatski dobija 1 input value passed by flutter koji poziva ovu builder fn buk kada pokusava da prikaze showModalBottomSheet.
   Ovde koristmo ctx, a ne context, jer je to drugaciji context ustv pa das e ne clashaju, i onda u return vracamo nas widget koji zelimo da se renderuje kada se klikne na add btn */
   void _openAddExpenseOverlay() {
+    //! Kada koristimo isScrollControlled parametar showModalBottomSheet() metoda, i stavimo da bude true, kada otvorimo modal overlay on ce zauzimati full-height, tako da tastatura nece prekrivati ovaj modal. Medjutim,a sada kontent prekriva neke stvari gde je kamera recimo za neke uredjaje. Da se to ne bi desavalao idemo u new_expanses.dart i tamo cemo dodati padding, tj editovacemo vec postojeci iz .symmetric u .fromLTRB)(16, 48, 16, 16)
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       // builder: (ctx) => Text('Modal botom sheet'),
       builder: (ctx) => NewExpense(onAddExpense: _addExpense),
