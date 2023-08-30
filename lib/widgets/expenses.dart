@@ -51,13 +51,48 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
+    final expenseIndex = _registeredExpenses.indexOf(expense);
+
     setState(() {
       _registeredExpenses.remove(expense);
     });
+
+    /*  ? ScaffoldMessenger.of().clearSnackBars()
+    kada se uklanja vise itema iz liste odjedno, tj jedan za drugim, ovo omogucava da se snackbar dole ocisti ubrzo, a ne da jedan ceka 3s od prethodnog, pa se prikaze on */
+    ScaffoldMessenger.of(context).clearSnackBars();
+
+    /* ? ScaffoldMessenger.of().showSnackBar()
+    obavezan of metod koji za parametar uzima context koji nam je dostupan u ovoj klasi jer je bazirana na State klasi */
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: const Text('Expense removed'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () => {
+            setState(() {
+              //! insert kao i add dodaje item u listu sa razlikom ad dodaje na specificnoj poziciji jer zelimo da item koji je uklonjen (slucajno recimo) vratimo na isto mesto gde je bio. Zato moramo da kreiramo expenseIndex promenljivu koja ce cuvati poziciju tog indexa sa _registeredExpenses.indexOf(expense),i to cemo staviti za prvi parametar u ovog insert metoda, a za drugi cemo staviti expense tj item koji smo obrisali
+              _registeredExpenses.insert(expenseIndex, expense);
+            })
+          },
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget mainContent = const Center(
+      child: Text('No expenses found. Start adding some!'),
+    );
+
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registeredExpenses,
+        onRemoveExpense: _removeExpense,
+      );
+    }
+
     return Scaffold(
       //? AppBar() widget
       /* actions parametar zeli listu widgeta koji se inace koristi za prikazivanje buttonsa u ovom top baru. I sada kada smo dodali AppBar, Flutter je automatski bolje fitovao sadrzaj, tipa vise The Chart nije na mestu gde je notch, vec app pocinje takoreci posle statusne traake one na telefonu */
@@ -75,10 +110,7 @@ class _ExpensesState extends State<Expenses> {
           const Text('The chart'),
           /* ! I mi bismo sad trebali da vidimo ovu ExpenseListu ali je ne vidimo, jer su ovi Expenses widget u Column()-u, i u toj Column sada imamo Listu (ExpensesList), takoreci imamo Column unutar Columna, kada imamo kombinaciju kao ova, uvek cemo biti u nekom problemu jer Flutter ne zna kako da size-uje ili kako da restrict inner Column. I ovaj tip problema se resava tako sto ExpensesList wrapujemo unutar Expanded() widgeta, i setujemo ovu ExpesesListu za njegov child */
           // ExpensesList(expenses: _registeredExpenses),
-          Expanded(
-            child: ExpensesList(
-                expenses: _registeredExpenses, onRemoveExpense: _removeExpense),
-          ),
+          Expanded(child: mainContent),
           // Text('Expenses list... '),
         ],
       ),
