@@ -36,3 +36,22 @@ class Expense {
   // koristicemo 3d party package za formating dates, a to je Intl: flutter pub add intl
   String get formattedDate => formatter.format(date);
 }
+
+/* Za kreiranje Charta potrebno nam je vise bucket-a, jedan za svaku kategoriju da bismo mogli da saberemo sve troskove koje imamo za svaku kategoriju i prikazemo to u grafikonu. Za to kreiramo ovu posebnu kalsu koja ce da sadrzi sve te sabrane podatke */
+class ExpenseBucket {
+  const ExpenseBucket({required this.category, required this.expenses});
+
+  final Category category;
+  final List<Expense> expenses;
+
+  // double je broj sa decimalama. ovde cemo sabirati sve troskove
+  double get totalExpenses {
+    double sum = 0;
+
+    for (final expense in expenses) {
+      sum += expense.amount; // sum = sum + expense.amount
+    }
+
+    return sum;
+  }
+}
