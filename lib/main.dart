@@ -3,11 +3,34 @@ import 'package:expense_tracker/widgets/expenses.dart';
 
 // k je kao neki convenient i precutni dogovor da se koristi za globalne promenljive, pogotovo za teme. ali ne moramo, tho
 var kColorScheme =
-    ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 18, 215, 140));
+    ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 18, 215, 140));
+
+// brightness govori dartu da napravi color scheme za dark mode
+var kDarkColorScheme = ColorScheme.fromSeed(
+    brightness: Brightness.dark,
+    seedColor: const Color.fromARGB(255, 7, 77, 50));
 
 void main() {
   runApp(
     MaterialApp(
+      darkTheme: ThemeData.dark().copyWith(
+        useMaterial3: true,
+        colorScheme: kDarkColorScheme,
+        cardTheme: const CardTheme().copyWith(
+          color: kDarkColorScheme.secondaryContainer,
+          margin: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: kDarkColorScheme.primaryContainer,
+            foregroundColor: kDarkColorScheme.onPrimaryContainer,
+          ),
+        ),
+      ),
+
       /* kada koristimo copyWith() na neki nacin overwritujemo originalnu material 3 temu, dakle koristimo original default flutter md temu, ali je overvritujemo sa svojim vrednostima.
       
       Inace postoji neka inkonzistentnost kada se koristi .copyWith(), a kada .styleFrom() kao recimo sa buttons */
@@ -43,6 +66,9 @@ void main() {
           // svi skrins ce imati ovaj bg
           // scaffoldBackgroundColor: Color.fromARGB(255, 193, 171, 241),
           ),
+
+      //* koji mode da bude defaultni, ThemeMode.light | ThemeMode.dark | ThemeMode.system. Medjutim ,defaultni by flutter je ThemeMode.system tako da to mi ne moramo da setujemo
+      // themeMode: ThemeMode.system,
       home: const Expenses(),
     ),
   );

@@ -36,7 +36,8 @@ class ExpensesList extends StatelessWidget {
           color: Theme.of(context).colorScheme.error.withOpacity(0.5),
           /* stavljamo margin da pocne gde i nas card
           - ali to bas nije pametno ovako staticno jer sta ako se promeni margin carda, onda moramo i ovo. zato bolje d adohvatimo margin carda i unesemo ovde za margin
-          - inace mora da se napise margin! sa uzvicnikom jer on tripuje da je margin null, pa mu govorimo da nije */
+          - inace mora da se napise margin! sa uzvicnikom jer on tripuje da je margin null, pa mu govorimo da nije
+          ! - medjutim kada smo koristili dark mode, dolazi do errora upravo zbog ovog margin!, jer on u dark modu nije setovan. Ovo moze da se resi na vise nacina,  tipa prvo da se proveri da li ke margin null, ili jedn da prepisemo stil taj od cardTheme i za dark mode, sto smo mi uradili */
           // margin: EdgeInsets.symmetric(horizontal: 16), // I
           // margin: Theme.of(context).cardTheme.margin, // II
           margin: EdgeInsets.symmetric(
