@@ -83,6 +83,14 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    //? MediaQuery.of(context)
+    /*  Za to mozemo koristiit MediaQuery klasu koja ima .of constructor fn koja prihvata context za argument koji sadrzi bitne meta informacije o widgetu u kom se ovaj kod izvrsava i o inace  njegovoj poziciji u widget tree. I kada se MediaQuery konektuje sa contextom mozemo pristupiti mnostvo informacijama na tom kreiranom MediaQuery objektu.
+    Npr, postoji size property koji daje pristup objektu koji daje jos vise informacija o svim dostupnim velicinama na uredjaju, tipa aspectRatio, height, width, itd
+    - Inace, kada rotiramo ekran, flutter ponovo executuje ovaj build metod pa dobijamo apdejtovane vrednosti za width i height */
+    // print(MediaQuery.of(context).size.width);
+    // print(MediaQuery.of(context).size.height);
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent = const Center(
       child: Text('No expenses found. Start adding some!'),
     );
@@ -98,23 +106,34 @@ class _ExpensesState extends State<Expenses> {
       //? AppBar() widget
       /* actions parametar zeli listu widgeta koji se inace koristi za prikazivanje buttonsa u ovom top baru. I sada kada smo dodali AppBar, Flutter je automatski bolje fitovao sadrzaj, tipa vise The Chart nije na mestu gde je notch, vec app pocinje takoreci posle statusne traake one na telefonu */
       appBar: AppBar(
-        title: Text('Flutter Expense tracker'),
+        title: const Text('Flutter Expense tracker'),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: _openAddExpenseOverlay,
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          /* ! I mi bismo sad trebali da vidimo ovu ExpenseListu ali je ne vidimo, jer su ovi Expenses widget u Column()-u, i u toj Column sada imamo Listu (ExpensesList), takoreci imamo Column unutar Columna, kada imamo kombinaciju kao ova, uvek cemo biti u nekom problemu jer Flutter ne zna kako da size-uje ili kako da restrict inner Column. I ovaj tip problema se resava tako sto ExpensesList wrapujemo unutar Expanded() widgeta, i setujemo ovu ExpesesListu za njegov child */
-          // ExpensesList(expenses: _registeredExpenses),
-          Expanded(child: mainContent),
-          // Text('Expenses list... '),
-        ],
-      ),
+
+      /* ovde hocemo da promenimo layut kada je tel u portrait modu a kada je u landscape. kad je ulandscape zelimo da Chart i Expanded tj lista troskova budu prikazani jedno pored drugog, dakle u tom slucaju bi trebalo koristiti Row umesto Column, zar ne. Zato treba da gore u Widget buildu proverimo koliko width-a imamo dostupno, i ako nemamo dovoljno onda zelimo da switchujemo u Row.
+      Za to mozemo koristiit MediaQuery klasu koja ima .of constructor fn koja prihvata context za argument  */
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                /* ! I mi bismo sad trebali da vidimo ovu ExpenseListu ali je ne vidimo, jer su ovi Expenses widget u Column()-u, i u toj Column sada imamo Listu (ExpensesList), takoreci imamo Column unutar Columna, kada imamo kombinaciju kao ova, uvek cemo biti u nekom problemu jer Flutter ne zna kako da size-uje ili kako da restrict inner Column. I ovaj tip problema se resava tako sto ExpensesList wrapujemo unutar Expanded() widgeta, i setujemo ovu ExpesesListu za njegov child */
+                // ExpensesList(expenses: _registeredExpenses),
+                Expanded(child: mainContent),
+                // Text('Expenses list... '),
+              ],
+            )
+          /* Medjutim ovde sad posytoji problem sto Row zauzima width koliko god moze, ali i njegov child Chart isto (jer ima width: double.infinity), a to izaziva gresku u dartu i sadrzaj ne moze da se prikaze kako treba. Zato kada imamo parenta koji zauzima width koliko moze, i child-a koji isto zauzima koliko moze, treba child da metnemo u Expanded */
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _registeredExpenses)),
+                Expanded(child: mainContent),
+              ],
+            ),
     );
   }
 }
