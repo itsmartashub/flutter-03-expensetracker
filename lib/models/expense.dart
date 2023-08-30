@@ -44,6 +44,15 @@ class ExpenseBucket {
   final Category category;
   final List<Expense> expenses;
 
+  /* nasa alternativna named constructor funkcija koja se kreira koristeci ime klase ExpenseBucket pa stavljamo tacku pa ime nase exra constructor f-je koju zelimo da dodamo u ovu klasu, u nasem slucaju ce to biti forCategory().
+  Tako recimo f-nisu i ovde ovi wigeti neki, recimo EdgeInsets.symmetric() 
+  - U njoj imamo Listu Expenses-a lkoju cemo nazvali allExpenses, dakle svi troskvi, svih kategorija, i za drugi argument zelimo da njime setujemo kategoriju
+  i logika ovoga je da dohvatimo sve troskve koje imamo i onda filtriramo onu koja pripada this.category pa da mozemo da setujemo expenses za ovaj ExpenseBucket u listu svih troskova allExpenses*/
+  ExpenseBucket.forCategory(List<Expense> allExpenses, this.category)
+      : expenses = allExpenses
+            .where((expense) => expense.category == category)
+            .toList();
+
   // double je broj sa decimalama. ovde cemo sabirati sve troskove
   double get totalExpenses {
     double sum = 0;
