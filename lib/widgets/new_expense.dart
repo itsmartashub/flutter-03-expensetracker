@@ -112,8 +112,9 @@ class _NewExpenseState extends State<NewExpense> {
       child: SingleChildScrollView(
         child: Padding(
             // padding: const EdgeInsets.all(16),
-            // da kontent ne bi se overlapovao sa gore kamerom i sl
-            padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardSpace + 16),
+            //* da kontent ne bi se overlapovao sa gore kamerom i sl, ali posle cemo dodati useSafeArea: true u expenses.dart za showModalBottomSheet(), pa cemo ovaj padding top od 48 da vratimo na 16
+            // padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardSpace + 16),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
             child: Column(
               //? TextField widget
               /* Omogucava korisniku da unese text. Ima mnooogo propertyja */

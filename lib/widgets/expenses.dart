@@ -35,8 +35,12 @@ class _ExpensesState extends State<Expenses> {
   Njemu treba fn kao vrednost koja vraca Widget, i uatomatski dobija 1 input value passed by flutter koji poziva ovu builder fn buk kada pokusava da prikaze showModalBottomSheet.
   Ovde koristmo ctx, a ne context, jer je to drugaciji context ustv pa das e ne clashaju, i onda u return vracamo nas widget koji zelimo da se renderuje kada se klikne na add btn */
   void _openAddExpenseOverlay() {
-    //! Kada koristimo isScrollControlled parametar showModalBottomSheet() metoda, i stavimo da bude true, kada otvorimo modal overlay on ce zauzimati full-height, tako da tastatura nece prekrivati ovaj modal. Medjutim,a sada kontent prekriva neke stvari gde je kamera recimo za neke uredjaje. Da se to ne bi desavalao idemo u new_expanses.dart i tamo cemo dodati padding, tj editovacemo vec postojeci iz .symmetric u .fromLTRB)(16, 48, 16, 16)
+    /* ! Kada koristimo isScrollControlled parametar showModalBottomSheet() metoda, i stavimo da bude true, kada otvorimo modal overlay on ce zauzimati full-height, tako da tastatura nece prekrivati ovaj modal. Medjutim,a sada kontent prekriva neke stvari gde je kamera recimo za neke uredjaje. Da se to ne bi desavalao idemo u new_expanses.dart i tamo cemo dodati padding, tj editovacemo vec postojeci iz .symmetric u .fromLTRB)(16, 48, 16, 16)
+    ? useSafeArea; true
+    - Inace, mi imamo custom padding top koji rucno resava problem sa overlapovanjem kontenta sa kamerom i sl, ali to bas nije dobro fixno drzati, jer nece biti dobro na svim uredjajima, zato stavimo default 16, i dodacemo ovde parametar useSafeArea: true. To je built-in u flutteru.
+    Npr wigeti poput Scaffold() widget to vec ima u sebi "ugradjeno" tj internally on automatski koristi useSafeArea koncept */
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       // builder: (ctx) => Text('Modal botom sheet'),
