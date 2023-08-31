@@ -1,3 +1,6 @@
+import 'dart:io'; // Platform.isIOS
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart'; // da bismo mogli da koristimo formatter koji smo definisali tamo sa: final formatter = DateFormat.yMd(); i ovde, wtf
 
@@ -56,15 +59,27 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
-  void _submitExpenseData() {
-    // moramo pretvoriti amount koju korisnik unosi iz string au broj. to mozemo uraditi sa double.tryParse() koji za argument uzima string, potom vraca DOUBLE ako je uspeo da pretvori taj string u broj ili vraca NULL ako ne moze da konvertuje. reicmo tryParse('Hellooo') bi bilo null, a recimo tryParse('1.21') bi bilo 1.21
-    final enteredAmount = double.tryParse(_amountController.text);
-    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
-
-    // trim() moze da se pozovde na textove, a .isEmpty() moze i na String i na List
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
+  void _showDialog() {
+    //@ Platform.isIOS
+    if (Platform.isIOS) {
+      // ? showCupertinoDialog() = iOS pop-ip
+      showCupertinoDialog(
+        context: context,
+        builder: (ctx) => CupertinoAlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text(
+              'Please make sure a valid title, amount, date and categor was entered..'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            )
+          ],
+        ),
+      );
+    } else {
       //? showDialog() = prikazuje neku info ili error dialog, neki pop-up
       showDialog(
         context: context,
@@ -74,13 +89,27 @@ class _NewExpenseState extends State<NewExpense> {
               'Please make sure a valid title, amount, date and categor was entered..'),
           actions: [
             TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                },
-                child: const Text('Okay'))
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            )
           ],
         ),
       );
+    }
+  }
+
+  void _submitExpenseData() {
+    // moramo pretvoriti amount koju korisnik unosi iz string au broj. to mozemo uraditi sa double.tryParse() koji za argument uzima string, potom vraca DOUBLE ako je uspeo da pretvori taj string u broj ili vraca NULL ako ne moze da konvertuje. reicmo tryParse('Hellooo') bi bilo null, a recimo tryParse('1.21') bi bilo 1.21
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    // trim() moze da se pozovde na textove, a .isEmpty() moze i na String i na List
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      _showDialog();
       return;
     }
 
